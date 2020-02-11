@@ -4,10 +4,10 @@
 
 int main(){
     int error = hardware_init();
-    //if(error != 0){
-    //   fprintf(stderr, "Unable to initialize hardware\n");
-    //  exit(1);
-    //}
+    if(error != 0){
+       fprintf(stderr, "Unable to initialize hardware\n");
+      exit(1);
+    }
 
     printf("=== Example Program ===\n");
     printf("Press the stop button on the elevator panel to exit\n");
@@ -28,3 +28,10 @@ int main(){
         }
     }
 }
+
+
+int elevator_init()
+{
+  return 0;
+}
+

@@ -1,7 +1,7 @@
 SIM := true
-SOURCES := main.c
+SOURCES := elevator.c
 
-SOURCE_DIR := .
+SOURCE_DIR := src
 BUILD_DIR := build
 
 OBJ := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SOURCES))
