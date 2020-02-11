@@ -15,26 +15,32 @@
 
   */
 typedef enum {
-  ELEVATOR_INIT,
+  ELEVATOR_STATE_INIT,
   /** Init state, unknown position, so moves down */
-  ELEVATOR_INIT_MOVING_DOWN,
+  ELEVATOR_STATE_INIT_MOVING_DOWN,
   /** Idle state, no pending targets*/
-  ELEVATOR_IDLE, 
+  ELEVATOR_STATE_IDLE, 
   /** Elevator moving down towards a target*/
-  ELEVATOR_MOVING_DOWN, 
+  ELEVATOR_STATE_MOVING_DOWN, 
   /** Elevator moving up towards a target*/
-  ELEVATOR_MOVING_UP, 
+  ELEVATOR_STATE_MOVING_UP, 
   /** Elevator stopped at a target floor, with door closed*/
-  ELEVATOR_STOPPED_AT_FLOOR, 
+  ELEVATOR_STATE_STOPPED_AT_FLOOR, 
   /** Elevator stopped at a target floor, with door open*/
-  ELEVATOR_OPEN, 
+  ELEVATOR_STATE_OPEN, 
   /** Elevator stopped at a target floor, with door open and obstructed*/
-  ELEVATOR_OBSTRUCTION, 
+  ELEVATOR_STATE_OBSTRUCTION, 
   /** Emergency stop button pressed, elevator standing still */
-  ELEVATOR_ESTOP, 
+  ELEVATOR_STATE_ESTOP, 
   /** Emergency stop button pressed, elevator standing still at floor with open door */
-  ELEVATOR_ESTOP_OPEN 
+  ELEVATOR_STATE_ESTOP_OPEN 
 } ElevatorState;
+
+static ElevatorState m_elevator_current_state;
+static int m_elevator_current_target;
+static int m_elevator_current_floor;
+static int m_elevator_last_floor;
+
 
 /**
   @brief Initializes the main elevator control loop
