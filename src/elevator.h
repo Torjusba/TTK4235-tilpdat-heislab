@@ -70,4 +70,10 @@ int elevator_update_orders();
   */
 int elevator_update_state();
 
+/** Internal */
+int elevator_update_floor_status();
+
+/** Internal */
+int elevator_add_order_if_button_pressed(int floor, HardwareOrder hardware_order);
+
 #endif //_ELEVATOR_H
