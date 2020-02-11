@@ -67,6 +67,20 @@ int elevator_update_floor_status()
 
 int elevator_update_state()
 {
+  // ESTOP takes priority, but only if not already estopped
+  if (m_elevator_current_state != ELEVATOR_STATE_ESTOP && m_elevator_current_state != ELEVATOR_STATE_ESTOP_OPEN)
+  {
+    if (hardware_read_stop_signal())
+    {
+      //TODO: Clear queue properly
+      // orders_clear_queue();
+      m_elevator_current_target = -1;
+      hardware_command_stop_light(1);
+      hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+      m_elevator_current_state = ELEVATOR_STATE_ESTOP;
+    }
+  }
+
   switch (m_elevator_current_state)
   {
     case ELEVATOR_STATE_INIT:
@@ -163,6 +177,7 @@ int elevator_update_state()
 	m_elevator_current_state = ELEVATOR_STATE_ESTOP_OPEN;
       } else if (!hardware_read_stop_signal())
       {
+	hardware_command_stop_light(0);
 	m_elevator_current_state = ELEVATOR_STATE_IDLE;
       }
       break;
@@ -171,6 +186,7 @@ int elevator_update_state()
       if (!hardware_read_stop_signal())
       {
 	m_elevator_current_state = ELEVATOR_STATE_OPEN;
+	hardware_command_stop_light(0);
       }
       break;
 
