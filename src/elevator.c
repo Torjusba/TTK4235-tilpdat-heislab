@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "elevator.h"
 
+#define TUI
+
 int main(int argc, char **argv){
     int error = hardware_init();
     if(error != 0){
@@ -19,6 +21,10 @@ int main(int argc, char **argv){
 
 
     while(1){
+#ifdef TUI
+	printf("\r Last: %d | Current: %d | Target: %d \t\t",m_elevator_last_floor, m_elevator_current_floor, m_elevator_current_target);
+
+#endif
 	if(elevator_update_orders())
 	{
 	  fprintf(stderr, "Unable to upate orders");
