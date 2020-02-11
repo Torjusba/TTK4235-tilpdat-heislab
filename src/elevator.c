@@ -202,7 +202,10 @@ int elevator_add_order_if_button_pressed(int floor, HardwareOrder hardware_order
 {
   if (hardware_read_order(floor, hardware_order))
   {
-    orders_add_order(hardware_order, floor);
+    // This is just for testing purposes
+    m_elevator_current_target = floor;
+    //TODO: Actually add orders using orders module
+    //orders_add_order(hardware_order, floor);
   }
   return 0;
 }
