@@ -3,6 +3,11 @@
   @brief The elevator state machine module
 
 */
+#ifndef _ELEVATOR_H
+#define _ELEVATOR_H
+
+#include "driver/hardware.h"
+#include "orders_test.h"
 
 /**
   @enum ElevatorState
@@ -58,3 +63,5 @@ int elevator_update_orders();
   @returns 0 on success, 1 on fail
   */
 int elevator_update_state();
+
+#endif //_ELEVATOR_H
