@@ -1,3 +1,8 @@
+/**
+  @file
+  @brief Hardware driver for the elevator
+*/
+
 #ifndef HARDWARE_SAL_H
 #define HARDWARE_SAL_H
 #define HARDWARE_NUMBER_OF_FLOORS 4
