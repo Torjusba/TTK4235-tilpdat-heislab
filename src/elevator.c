@@ -52,8 +52,12 @@ int elevator_update_floor_status()
   {
     if (hardware_read_floor_sensor(floor))
     {
-      m_elevator_current_floor = floor;
-      m_elevator_last_floor = floor;
+      if(floor != m_elevator_current_floor)
+      {
+	hardware_command_floor_indicator_on(floor);
+	m_elevator_current_floor = floor;
+	m_elevator_last_floor = floor;
+      }
       return 0;
     }
   }
@@ -184,6 +188,19 @@ int elevator_add_order_if_button_pressed(int floor, HardwareOrder hardware_order
   {
     orders_add_order(hardware_order, floor);
   }
+  return 0;
+}
+
+/** For internal use only. Called when the elevator reaches its target */
+int elevator_clear_target()
+{
+  hardware_command_order_light(m_elevator_last_floor, HARDWARE_ORDER_DOWN, 0);
+  hardware_command_order_light(m_elevator_last_floor, HARDWARE_ORDER_INSIDE, 0);
+  hardware_command_order_light(m_elevator_last_floor, HARDWARE_ORDER_UP, 0);
+
+  //orders_clear_floor(m_elevator_last_floor);
+
+  m_elevator_current_target = -1;
   return 0;
 }
 
