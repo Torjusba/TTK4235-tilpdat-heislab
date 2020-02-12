@@ -20,7 +20,7 @@
   @enum ElevatorState
   @brief Describes the state of the elevator FSM
 
-  */
+*/
 typedef enum {
   ELEVATOR_STATE_INIT,
   /** Init state, unknown position, so moves down */

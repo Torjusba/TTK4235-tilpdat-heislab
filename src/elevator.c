@@ -4,41 +4,41 @@
 
 int main(int argc, char **argv){
 
-    int error = hardware_init();
-    if(error != 0){
-       fprintf(stderr, "unable to initialize hardware\n");
-      exit(1);
-    }
-    error = elevator_init();
-    if(error != 0){
-       fprintf(stderr, "unable to initialize elevator FSM\n");
-      exit(1);
-    }
+  int error = hardware_init();
+  if(error != 0){
+    fprintf(stderr, "unable to initialize hardware\n");
+    exit(1);
+  }
+  error = elevator_init();
+  if(error != 0){
+    fprintf(stderr, "unable to initialize elevator FSM\n");
+    exit(1);
+  }
 
 #ifdef TUI
-    printf("=== Elevator control ===\n");
+  printf("=== Elevator control ===\n");
 #endif
-    while(1){
+  while(1){
 #ifdef TUI
-	printf("\r Last: %d | Current: %d | Target: %d \t\t",m_elevator_last_floor, m_elevator_current_floor, m_elevator_current_target);
+    printf("\r Last: %d | Current: %d | Target: %d \t\t",m_elevator_last_floor, m_elevator_current_floor, m_elevator_current_target);
 
 #endif
-	if(elevator_update_orders())
-	{
-	  fprintf(stderr, "Unable to upate orders");
-	}
-
-	if (elevator_update_floor_status())
-	{
-	  fprintf(stderr, "Unable to update floor status");
-	}
-
-	if(elevator_update_state())
-	{
-	  fprintf(stderr, "Unable to update state");
-	}
+    if(elevator_update_orders())
+    {
+      fprintf(stderr, "Unable to upate orders");
     }
-    return 0;
+
+    if (elevator_update_floor_status())
+    {
+      fprintf(stderr, "Unable to update floor status");
+    }
+
+    if(elevator_update_state())
+    {
+      fprintf(stderr, "Unable to update state");
+    }
+  }
+  return 0;
 }
 
 
