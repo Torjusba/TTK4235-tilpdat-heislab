@@ -22,8 +22,9 @@
 
 */
 typedef enum {
+  /** Init state, unknown position. */
   ELEVATOR_STATE_INIT,
-  /** Init state, unknown position, so moves down */
+  /** Init state, moving down in an attempt to find a floor */
   ELEVATOR_STATE_INIT_MOVING_DOWN,
   /** Idle state, no pending targets*/
   ELEVATOR_STATE_IDLE, 
