@@ -6,8 +6,11 @@
 #ifndef _ELEVATOR_H
 #define _ELEVATOR_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "driver/hardware.h"
 #include "orders_test.h"
+#include "timer.h"
 
 /**
   @enum ElevatorState
