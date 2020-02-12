@@ -8,7 +8,8 @@
 
 #include <time.h>
 
-static clock_t m_timer_reference_time;
+
+static time_t m_timer_reference_time;
 /**
   @brief Reset the reference time
 
@@ -25,9 +26,9 @@ int timer_reset()
 
   @returns The amount of seconds since last reset
   */
-int timer_get_seconds()
+double timer_get_seconds()
 {
-  return (difftime(time(NULL), m_timer_reference_time));
+  return difftime(time(NULL), m_timer_reference_time);
 }
 
 #endif // _TIMER_H

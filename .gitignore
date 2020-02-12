@@ -2,6 +2,6 @@ html/
 latex/
 build/
 *.o
-.swp
+*.swp
 elevator
 timer_test
