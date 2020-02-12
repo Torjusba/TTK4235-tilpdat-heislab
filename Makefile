@@ -35,8 +35,8 @@ $(BUILD_DIR)/driver/%.o : $(SOURCE_DIR)/driver/%.c | $(BUILD_DIR)
 $(DRIVER_ARCHIVE) : $(DRIVER_SOURCE:%.c=$(BUILD_DIR)/driver/%.o)
 	ar rcs $@ $^
 
-timer_test: tests/timer_test.c
-	$(CC) $(CFLAGS) $^ -o $@
+timer_test: tests/timer_test.c src/timer.h
+	$(CC) $(CFLAGS) tests/timer_test.c -o $@ 
 
 .PHONY: clean
 clean :
