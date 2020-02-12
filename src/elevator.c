@@ -3,6 +3,7 @@
 #define TUI
 
 int main(int argc, char **argv){
+
     int error = hardware_init();
     if(error != 0){
        fprintf(stderr, "unable to initialize hardware\n");
@@ -14,10 +15,9 @@ int main(int argc, char **argv){
       exit(1);
     }
 
+#ifdef TUI
     printf("=== Elevator control ===\n");
-
-
-
+#endif
     while(1){
 #ifdef TUI
 	printf("\r Last: %d | Current: %d | Target: %d \t\t",m_elevator_last_floor, m_elevator_current_floor, m_elevator_current_target);
@@ -76,9 +76,7 @@ int elevator_update_state()
   {
     if (hardware_read_stop_signal())
     {
-      //TODO: Clear queue properly
-      // orders_clear_queue();
-      m_elevator_current_target = -1;
+      elevator_clear_orders();
       hardware_command_stop_light(1);
       hardware_command_movement(HARDWARE_MOVEMENT_STOP);
       m_elevator_current_state = ELEVATOR_STATE_ESTOP;
@@ -120,7 +118,7 @@ int elevator_update_state()
 	{
 	  // Elevator is already at target
 	  // TODO: Remove target
-	  // orders_complete_floor(int m_elevator_last_floor);
+	  // orders_clear_target(int m_elevator_last_floor);
 	}
       }
       break;
@@ -226,12 +224,31 @@ int elevator_clear_target()
   hardware_command_order_light(m_elevator_last_floor, HARDWARE_ORDER_INSIDE, 0);
   hardware_command_order_light(m_elevator_last_floor, HARDWARE_ORDER_UP, 0);
 
-  //orders_clear_floor(m_elevator_last_floor);
+  //TODO: Integrate with orders module
+  //orders_clear_target(m_elevator_last_floor);
 
   m_elevator_current_target = -1;
   return 0;
 }
 
+/** For internal use only. Called when the estop button is pressed */
+int elevator_clear_orders()
+{
+  elevator_clear_target();
+
+  for (int floor = 0; floor <= HARDWARE_NUMBER_OF_FLOORS-1; floor++)
+  {
+    hardware_command_order_light(floor, HARDWARE_ORDER_UP, 0);
+    hardware_command_order_light(floor, HARDWARE_ORDER_INSIDE, 0);
+    hardware_command_order_light(floor, HARDWARE_ORDER_DOWN, 0);
+  }
+
+  //TODO: Integrate with orders module
+  // orders_clear_all()
+  return 0;
+}
+
+/** For internal use only. Called every loop to poll for order button presses */
 int elevator_update_orders()
 {
   for (int floor = 0; floor <= HARDWARE_NUMBER_OF_FLOORS-1; floor++)

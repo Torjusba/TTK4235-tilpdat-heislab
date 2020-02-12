@@ -86,4 +86,7 @@ int elevator_clear_target();
 /** Internal */
 int elevator_add_order_if_button_pressed(int floor, HardwareOrder hardware_order);
 
+/** Internal */
+int elevator_clear_orders();
+
 #endif //_ELEVATOR_H
