@@ -23,9 +23,15 @@ int main(int argc, char **argv){
     printf("\r Last: %d | Current: %d | Target: %d \t\t",m_elevator_last_floor, m_elevator_current_floor, m_elevator_current_target);
 
 #endif
-    if(elevator_update_orders())
+
+    // Don't update orders in ESTOP or INIT states
+    if (m_elevator_current_state != ELEVATOR_STATE_ESTOP && m_elevator_current_state != ELEVATOR_STATE_ESTOP_OPEN &&
+	m_elevator_current_state != ELEVATOR_STATE_INIT && m_elevator_current_state != ELEVATOR_STATE_INIT_MOVING_DOWN)
     {
-      fprintf(stderr, "Unable to upate orders");
+      if(elevator_update_orders())
+      {
+	fprintf(stderr, "Unable to upate orders");
+      }
     }
 
     if (elevator_update_floor_status())
