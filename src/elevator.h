@@ -12,6 +12,11 @@
 #include "orders_test.h"
 #include "timer.h"
 
+
+// How long should the elevator door stay open?
+#define ELEVATOR_DOOR_WAIT_TIME 3
+
+
 /**
   @enum ElevatorState
   @brief Describes the state of the elevator FSM

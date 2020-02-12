@@ -162,7 +162,7 @@ int elevator_update_state()
 	m_elevator_current_state = ELEVATOR_STATE_OBSTRUCTION;
       } else
       {
-	if (timer_get_seconds() >= 3){
+	if (timer_get_seconds() >= ELEVATOR_DOOR_WAIT_TIME){
 	  hardware_command_door_open(0);
 	  m_elevator_current_state = ELEVATOR_STATE_STOPPED_AT_FLOOR;
 	}
