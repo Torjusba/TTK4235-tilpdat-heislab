@@ -144,13 +144,14 @@ int elevator_update_state()
     case ELEVATOR_STATE_STOPPED_AT_FLOOR:
       if (m_elevator_current_target == m_elevator_last_floor)
       {
-	//TODO: clear target properly
-	m_elevator_current_target = -1;
+	// Just arrived
+	elevator_clear_target();
 	hardware_command_door_open(1);
 	timer_reset();
 	m_elevator_current_state = ELEVATOR_STATE_OPEN;
       } else 
       {
+	// Floor has been handled already
 	m_elevator_current_state = ELEVATOR_STATE_IDLE;
       }
       break;
