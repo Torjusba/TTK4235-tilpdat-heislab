@@ -16,7 +16,7 @@ static clock_t m_timer_reference_time;
   */
 int timer_reset()
 {
-  m_timer_reference_time = clock();
+  m_timer_reference_time = time(NULL);
   return 0;
 }
 
@@ -27,7 +27,7 @@ int timer_reset()
   */
 int timer_get_seconds()
 {
-  return ((clock()-m_timer_reference_time)/CLOCKS_PER_SEC);
+  return (difftime(time(NULL), m_timer_reference_time));
 }
 
 #endif // _TIMER_H
