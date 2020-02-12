@@ -147,7 +147,7 @@ int elevator_update_state()
 	//TODO: clear target properly
 	m_elevator_current_target = -1;
 	hardware_command_door_open(1);
-	//TODO: timer_reset();
+	timer_reset();
 	m_elevator_current_state = ELEVATOR_STATE_OPEN;
       } else 
       {
@@ -161,15 +161,17 @@ int elevator_update_state()
 	m_elevator_current_state = ELEVATOR_STATE_OBSTRUCTION;
       } else
       {
-	//TODO: Check if 3 seconds has passed
-	hardware_command_door_open(0);
-	m_elevator_current_state = ELEVATOR_STATE_STOPPED_AT_FLOOR;
+	if (timer_get_seconds() >= 3){
+	  hardware_command_door_open(0);
+	  m_elevator_current_state = ELEVATOR_STATE_STOPPED_AT_FLOOR;
+	}
       }
       break;
 
     case ELEVATOR_STATE_OBSTRUCTION:
       if (!hardware_read_obstruction_signal())
       {
+	timer_reset();
 	m_elevator_current_state = ELEVATOR_STATE_OPEN;
       }
       break;
@@ -189,6 +191,7 @@ int elevator_update_state()
     case ELEVATOR_STATE_ESTOP_OPEN:
       if (!hardware_read_stop_signal())
       {
+	timer_reset();
 	m_elevator_current_state = ELEVATOR_STATE_OPEN;
 	hardware_command_stop_light(0);
       }
@@ -208,6 +211,7 @@ int elevator_add_order_if_button_pressed(int floor, HardwareOrder hardware_order
   {
     // This is just for testing purposes
     m_elevator_current_target = floor;
+    hardware_command_order_light(floor, hardware_order, 1);
     //TODO: Actually add orders using orders module
     //orders_add_order(hardware_order, floor);
   }
