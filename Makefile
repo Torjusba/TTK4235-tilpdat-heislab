@@ -35,6 +35,9 @@ $(BUILD_DIR)/driver/%.o : $(SOURCE_DIR)/driver/%.c | $(BUILD_DIR)
 $(DRIVER_ARCHIVE) : $(DRIVER_SOURCE:%.c=$(BUILD_DIR)/driver/%.o)
 	ar rcs $@ $^
 
+timer_test: tests/timer_test.c
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+
 .PHONY: clean
 clean :
-	rm -rf $(BUILD_DIR) elevator
+	rm -rf $(BUILD_DIR) elevator timer_test
