@@ -1,5 +1,5 @@
 SIM := true
-SOURCES := elevator.c
+SOURCES := elevator.c orders.c vec.c 
 
 SOURCE_DIR := src
 BUILD_DIR := build
@@ -15,7 +15,7 @@ else
 endif
 
 CC := gcc
-CFLAGS := -O0 -g3 -Wall -D_GNU_SOURCE -std=c11 -I$(SOURCE_DIR)
+CFLAGS := -O0 -g3 -Wall -D_GNU_SOURCE -std=gnu11 -I$(SOURCE_DIR)
 LDFLAGS := -L$(BUILD_DIR) -ldriver -lcomedi 
 
 .DEFAULT_GOAL := elevator

@@ -8,6 +8,7 @@ static int m_elevator_current_floor;
 // Last floor and movement direction must be remembered in case elevator is e-stopped between floors
 static HardwareMovement m_elevator_last_movement_direction;
 static int m_elevator_last_floor;
+//orders_init();
 
 
 int main(int argc, char **argv){
@@ -22,6 +23,8 @@ int main(int argc, char **argv){
         fprintf(stderr, "unable to initialize elevator FSM\n");
         exit(1);
     }
+    init_orders(); 
+    
 
 #ifdef TUI
     printf("=== Elevator control ===\n");
@@ -36,12 +39,15 @@ int main(int argc, char **argv){
         if (m_elevator_current_state != ELEVATOR_STATE_ESTOP && m_elevator_current_state != ELEVATOR_STATE_ESTOP_OPEN &&
                 m_elevator_current_state != ELEVATOR_STATE_INIT && m_elevator_current_state != ELEVATOR_STATE_INIT_MOVING_DOWN)
         {
-            if(elevator_update_orders())
+            if(elevator_update_orders(m_elevator_last_movement_direction))
             {
                 fprintf(stderr, "Unable to upate orders");
+                
             }
         }
-
+        elevator_update_orders(m_elevator_last_movement_direction);
+        elevator_update_floor_status();
+        elevator_update_state();
         if (elevator_update_floor_status())
         {
             fprintf(stderr, "Unable to update floor status");
@@ -234,7 +240,7 @@ int elevator_add_order_if_button_pressed(int floor, HardwareOrder hardware_order
         m_elevator_current_target = floor;
         hardware_command_order_light(floor, hardware_order, 1);
         //TODO: Actually add orders using orders module
-        //orders_add_order(hardware_order, floor);
+        orders_add_order(hardware_order, floor);
     }
     return 0;
 }
@@ -247,7 +253,7 @@ int elevator_clear_target()
     hardware_command_order_light(m_elevator_last_floor, HARDWARE_ORDER_UP, 0);
 
     //TODO: Integrate with orders module
-    //orders_clear_target(m_elevator_last_floor);
+    orders_clear_target(m_elevator_last_floor);
 
     m_elevator_current_target = -1;
     return 0;
@@ -266,7 +272,7 @@ int elevator_clear_orders()
     }
 
     //TODO: Integrate with orders module
-    // orders_clear_all()
+    orders_clear_all();
     return 0;
 }
 
@@ -280,7 +286,7 @@ int elevator_update_orders()
         elevator_add_order_if_button_pressed(floor, HARDWARE_ORDER_DOWN);
     }
     // TODO: Integrate with orders module
-    //orders_get_new_target(int current_floor);
+    m_elevator_current_target = orders_get_new_target(m_elevator_last_movement_direction, m_elevator_last_floor);
     return 0;
 }
 
