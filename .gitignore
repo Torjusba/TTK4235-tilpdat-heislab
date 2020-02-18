@@ -3,5 +3,8 @@ latex/
 build/
 *.o
 *.swp
+.clangd
+tags
+compile_commands.json
 elevator
 timer_test
