@@ -1,6 +1,11 @@
 #include "elevator.h"
-
 #define TUI
+
+static ElevatorState m_elevator_current_state;
+static int m_elevator_current_target;
+static int m_elevator_current_floor;
+static int m_elevator_last_floor;
+
 
 int main(int argc, char **argv){
 
