@@ -97,7 +97,7 @@ int elevator_update_state()
   switch (m_elevator_current_state)
   {
     case ELEVATOR_STATE_INIT:
-      hardware_command_movement(HARDWARE_ORDER_DOWN);
+      hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
       m_elevator_current_state = ELEVATOR_STATE_INIT_MOVING_DOWN;
       break;
 
