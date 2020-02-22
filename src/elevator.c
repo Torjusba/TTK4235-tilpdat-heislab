@@ -240,7 +240,6 @@ int elevator_add_order_if_button_pressed(int floor, HardwareOrder hardware_order
 {
     if (hardware_read_order(floor, hardware_order))
     {
-      // TODO: Don't add current floor
         hardware_command_order_light(floor, hardware_order, 1);
         orders_add_order(hardware_order, floor);
     }
@@ -279,9 +278,12 @@ int elevator_update_orders()
 {
     for (int floor = 0; floor <= HARDWARE_NUMBER_OF_FLOORS-1; floor++)
     {
+      if (floor != m_elevator_current_floor)
+      {
         elevator_add_order_if_button_pressed(floor, HARDWARE_ORDER_UP);
         elevator_add_order_if_button_pressed(floor, HARDWARE_ORDER_INSIDE);
         elevator_add_order_if_button_pressed(floor, HARDWARE_ORDER_DOWN);
+      }
     }
     m_elevator_current_target = orders_get_new_target(m_elevator_last_movement_direction, m_elevator_last_floor);
     return 0;
