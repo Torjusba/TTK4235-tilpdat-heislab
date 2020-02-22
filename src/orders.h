@@ -7,12 +7,14 @@
 //Some initializing if needed
 void init_orders(); 
 
+//Updating the list target_buffer
+void update_target_buffer(int floor); 
 
 //Updating the list orders_up when the up button is pressed on some floor
-void update_orders_up(HardwareOrder hardware_order, int floor);
+void update_orders_up(int floor);
 
 //Updating the list orders_down when the down button is pressed on some floor
-void update_orders_down(HardwareOrder hardware_order, int floor); 
+void update_orders_down(int floor); 
 
 
 void orders_add_order(HardwareOrder hardware_order, int floor);

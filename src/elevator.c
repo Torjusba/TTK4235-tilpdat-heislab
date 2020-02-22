@@ -38,16 +38,12 @@ int main(int argc, char **argv){
         // Don't update orders in ESTOP or INIT states
         if (m_elevator_current_state != ELEVATOR_STATE_ESTOP && m_elevator_current_state != ELEVATOR_STATE_ESTOP_OPEN &&
                 m_elevator_current_state != ELEVATOR_STATE_INIT && m_elevator_current_state != ELEVATOR_STATE_INIT_MOVING_DOWN)
+        
+        if (elevator_update_orders(m_elevator_last_movement_direction))
         {
-            if(elevator_update_orders(m_elevator_last_movement_direction))
-            {
-                fprintf(stderr, "Unable to upate orders");
-                
-            }
+            fprintf(stderr, "Unable to update orders");
         }
-        elevator_update_orders(m_elevator_last_movement_direction);
-        elevator_update_floor_status();
-        elevator_update_state();
+
         if (elevator_update_floor_status())
         {
             fprintf(stderr, "Unable to update floor status");
@@ -153,8 +149,16 @@ int elevator_update_state()
             if (m_elevator_current_target == m_elevator_current_floor)
             {
                 hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-                m_elevator_current_state = ELEVATOR_STATE_STOPPED_AT_FLOOR;
                 m_elevator_last_movement_direction = HARDWARE_MOVEMENT_STOP;
+		if (m_elevator_current_floor != -1)
+		{
+                m_elevator_current_state = ELEVATOR_STATE_STOPPED_AT_FLOOR;
+		}
+		else {
+		  // Engage estop if moving with no target
+		  fprintf(stderr, "Target set to -1 while moving. Engaging emergency stop\n");
+		  m_elevator_current_state = ELEVATOR_STATE_ESTOP;
+		}
             }
             break;
 
@@ -236,10 +240,8 @@ int elevator_add_order_if_button_pressed(int floor, HardwareOrder hardware_order
 {
     if (hardware_read_order(floor, hardware_order))
     {
-        // This is just for testing purposes
-        m_elevator_current_target = floor;
+      // TODO: Don't add current floor
         hardware_command_order_light(floor, hardware_order, 1);
-        //TODO: Actually add orders using orders module
         orders_add_order(hardware_order, floor);
     }
     return 0;
@@ -252,10 +254,7 @@ int elevator_clear_target()
     hardware_command_order_light(m_elevator_last_floor, HARDWARE_ORDER_INSIDE, 0);
     hardware_command_order_light(m_elevator_last_floor, HARDWARE_ORDER_UP, 0);
 
-    //TODO: Integrate with orders module
     orders_clear_target(m_elevator_last_floor);
-
-    m_elevator_current_target = -1;
     return 0;
 }
 
@@ -271,7 +270,6 @@ int elevator_clear_orders()
         hardware_command_order_light(floor, HARDWARE_ORDER_DOWN, 0);
     }
 
-    //TODO: Integrate with orders module
     orders_clear_all();
     return 0;
 }
@@ -285,7 +283,6 @@ int elevator_update_orders()
         elevator_add_order_if_button_pressed(floor, HARDWARE_ORDER_INSIDE);
         elevator_add_order_if_button_pressed(floor, HARDWARE_ORDER_DOWN);
     }
-    // TODO: Integrate with orders module
     m_elevator_current_target = orders_get_new_target(m_elevator_last_movement_direction, m_elevator_last_floor);
     return 0;
 }
