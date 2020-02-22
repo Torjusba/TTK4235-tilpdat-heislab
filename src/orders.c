@@ -4,7 +4,6 @@
 void init_orders(){
   orders_up = vector_create(); 
   orders_down = vector_create();
-  targets = vector_create();
   target_buffer = vector_create();
   target = -1; 
 }
@@ -221,6 +220,9 @@ void orders_clear_target(int floor){
 
 
 void orders_clear_all(){
+  vector_free(orders_up);
+  vector_free(orders_down);
+  vector_free(target_buffer);
   init_orders(); 
 }
 
