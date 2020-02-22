@@ -9,6 +9,7 @@
 
 
 ## TODO:
+- Open door if elevator is ordered to current floor?
 
 
 ## Known bugs:
