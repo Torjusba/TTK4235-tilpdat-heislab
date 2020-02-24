@@ -15,14 +15,13 @@ int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
     int orders_up_size = vector_size(orders_up);
     //Going through orders_up to see if we can do some stops on the way
     //And adding them to target
-
     for (int i = 0; i < orders_up_size; i++){
       if (curr_floor < orders_up[i] && target > orders_up[i]){
-	target = orders_up[i]; 
-	vector_remove(orders_up, i);
-	update_target_buffer(target);
-	i--;
-	orders_up_size--;
+	      target = orders_up[i]; 
+	      vector_remove(orders_up, i);
+      	update_target_buffer(target);
+	      i--;
+	      orders_up_size--;
       }
     }
     return target;
@@ -33,65 +32,71 @@ int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
     //And adding them to targets
     for (int i = 0; i < orders_down_size; i++){
       if (curr_floor > orders_down[i] && target < orders_down[i]){
-	target = orders_down[i]; 
-	vector_remove(orders_down, i);
-	update_target_buffer(target);
-	i--;
-	orders_down_size--;
+	      target = orders_down[i]; 
+	      vector_remove(orders_down, i);
+	      update_target_buffer(target);
+	      i--;
+	      orders_down_size--;
       }
     }
     return target;
   }
 
   //Checking if target is empty, and new target have to be included. 
-  if (target == -1){
+  
     int buffer_size = vector_size(target_buffer);
     if (buffer_size > 0){
       bubbleSort(target_buffer, buffer_size);
-      target = target_buffer[0];
+      if (hardware_movement == HARDWARE_MOVEMENT_DOWN){
+        target = target_buffer[buffer_size];
+      }else if (hardware_movement == HARDWARE_MOVEMENT_UP){
+        target = target_buffer[0];
+      }else 
+      target = target_buffer[0]; 
     }
-    else if (buffer_size == 0 && target == -1){
+
+    else if (buffer_size == 0){
       //Find closest order, and set to target
       int orders_up_size = vector_size(orders_up);
       int orders_down_size = vector_size(orders_down);
 
       if (orders_up_size == 0 && orders_down_size == 0)
       {
-	return -1;
+	    return -1;
       } else if (orders_down_size == 0)
       {
-	// Only orders going up
-	//Find closest floor to the elevator
-	int closest_floor_up = orders_up[0];	
-	int order_up_index = 0;
-	for (int i = 1; i < orders_up_size; i++){
-	  if (abs(closest_floor_up - curr_floor) > abs(orders_up[i] - curr_floor)){
+	      // Only orders going up
+	      //Find closest floor to the elevator
+	      int closest_floor_up = orders_up[0];	
+        int order_up_index = 0;
+	        for (int i = 1; i < orders_up_size; i++){
+	          if (abs(closest_floor_up - curr_floor) > abs(orders_up[i] - curr_floor)){
 
-	    closest_floor_up = orders_up[i];
-	    order_up_index = i;
-	  }
-	}
-	vector_remove(orders_up, order_up_index);
-	target = closest_floor_up;
-	update_target_buffer(target);
-	return target;
+	           closest_floor_up = orders_up[i];
+	           order_up_index = i;
+	          }
+	        }
+	    vector_remove(orders_up, order_up_index);
+	    target = closest_floor_up;
+    	update_target_buffer(target);
+	    return target;
       } else if (orders_up_size == 0)
       {
-	// Only orders going down
-	//Find closest floor to the elevator
-	int closest_floor_down = orders_down[0];	
-	int order_down_index = 0;
-	for (int i = 1; i < orders_down_size; i++){
-	  if (abs(closest_floor_down - curr_floor) > abs(orders_down[i] - curr_floor)){
+	    // Only orders going down
+    	//Find closest floor to the elevator
+	    int closest_floor_down = orders_down[0];	
+    	int order_down_index = 0;
+	      for (int i = 1; i < orders_down_size; i++){
+	        if (abs(closest_floor_down - curr_floor) > abs(orders_down[i] - curr_floor)){
 
-	    closest_floor_down = orders_down[i];
-	    order_down_index = i;
-	  }
-	}
-	vector_remove(orders_down, order_down_index);
-	target = closest_floor_down;
-	update_target_buffer(target);
-	return target;
+	          closest_floor_down = orders_down[i];
+	          order_down_index = i;
+	        }
+	      }
+	    vector_remove(orders_down, order_down_index);
+	    target = closest_floor_down;
+	    update_target_buffer(target);
+	    return target;
       } else 
       {
 	// There are both orders going up and down
@@ -137,7 +142,7 @@ int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
 	}
       }
     }
-  }
+  
   return target;
 }
 
@@ -151,7 +156,9 @@ void orders_add_order(HardwareOrder hardware_order, int floor){
       update_orders_down(floor);
       break;
     case HARDWARE_ORDER_INSIDE:
-      update_target_buffer(floor);
+      //update_target_buffer(floor);
+      update_orders_down(floor);
+      update_orders_up(floor);
       break;
     default:
       break;
