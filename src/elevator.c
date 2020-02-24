@@ -140,7 +140,7 @@ int elevator_update_state()
                 }else
                 {
                     // Elevator is already at target
-                    elevator_clear_target();
+                    m_elevator_current_state = ELEVATOR_STATE_STOPPED_AT_FLOOR;
                 }
             }
             break;
@@ -172,18 +172,9 @@ int elevator_update_state()
             break;
 
         case ELEVATOR_STATE_STOPPED_AT_FLOOR:
-            if (m_elevator_current_target == m_elevator_current_floor)
-            {
-                // Just arrived
-                elevator_clear_target();
                 hardware_command_door_open(1);
                 timer_reset();
                 m_elevator_current_state = ELEVATOR_STATE_OPEN;
-            } else 
-            {
-                // Floor has been handled already
-                m_elevator_current_state = ELEVATOR_STATE_IDLE;
-            }
             break;
 
         case ELEVATOR_STATE_OPEN:
@@ -194,7 +185,8 @@ int elevator_update_state()
             {
                 if (timer_get_seconds() >= ELEVATOR_DOOR_WAIT_TIME){
                     hardware_command_door_open(0);
-                    m_elevator_current_state = ELEVATOR_STATE_STOPPED_AT_FLOOR;
+                    elevator_clear_target();
+                    m_elevator_current_state = ELEVATOR_STATE_IDLE;
                 }
             }
             break;
@@ -278,12 +270,9 @@ int elevator_update_orders()
 {
     for (int floor = 0; floor <= HARDWARE_NUMBER_OF_FLOORS-1; floor++)
     {
-      if (floor != m_elevator_current_floor)
-      {
         elevator_add_order_if_button_pressed(floor, HARDWARE_ORDER_UP);
         elevator_add_order_if_button_pressed(floor, HARDWARE_ORDER_INSIDE);
         elevator_add_order_if_button_pressed(floor, HARDWARE_ORDER_DOWN);
-      }
     }
     m_elevator_current_target = orders_get_new_target(m_elevator_last_movement_direction, m_elevator_last_floor);
     return 0;

@@ -25,6 +25,7 @@ int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
 	orders_up_size--;
       }
     }
+    return target;
   }
   else if (hardware_movement == HARDWARE_MOVEMENT_DOWN){
     int orders_down_size = vector_size(orders_down);
@@ -39,6 +40,7 @@ int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
 	orders_down_size--;
       }
     }
+    return target;
   }
 
   //Checking if target is empty, and new target have to be included. 
@@ -58,7 +60,7 @@ int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
 	return -1;
       } else if (orders_down_size == 0)
       {
-	// Only orders up
+	// Only orders going up
 	//Find closest floor to the elevator
 	int closest_floor_up = orders_up[0];	
 	int order_up_index = 0;
@@ -71,12 +73,11 @@ int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
 	}
 	vector_remove(orders_up, order_up_index);
 	target = closest_floor_up;
+	update_target_buffer(target);
 	return target;
-
-
       } else if (orders_up_size == 0)
       {
-	// Only orders down
+	// Only orders going down
 	//Find closest floor to the elevator
 	int closest_floor_down = orders_down[0];	
 	int order_down_index = 0;
@@ -89,18 +90,17 @@ int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
 	}
 	vector_remove(orders_down, order_down_index);
 	target = closest_floor_down;
+	update_target_buffer(target);
 	return target;
-
-
       } else 
       {
-	// Both orders up and down
+	// There are both orders going up and down
 	int closest_floor_up = orders_up[0];
 	int closest_floor_down = orders_down[0];
-	int order_up_index;
-	int order_down_index;
+	int order_up_index = 0;
+	int order_down_index = 0;
 
-	//Find closest floor to the elevator
+	//Find closest order to the elevator
 	for (int i = 1; i < orders_up_size; i++){
 	  if (abs(closest_floor_up - curr_floor) > abs(orders_up[i] - curr_floor)){
 
@@ -115,23 +115,30 @@ int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
 	    order_down_index = i; 
 	  }
 	}
+	
+	// Compare closest orders
 	if (abs(closest_floor_down - curr_floor) < abs(closest_floor_up-curr_floor)){
 	  target = closest_floor_down;
+	  update_target_buffer(target);
 	  vector_remove(orders_down, order_down_index);
+	  return target;
 	}
 	else if (abs(closest_floor_down - curr_floor) > abs(closest_floor_up-curr_floor)){
 	  target = closest_floor_up;
+	  update_target_buffer(target);
 	  vector_remove(orders_up, order_up_index);
+	  return target;
 	}
 	else if (abs(closest_floor_down - curr_floor) == abs(closest_floor_up-curr_floor)){
 	  target = closest_floor_up;
+	  update_target_buffer(target);
 	  vector_remove(orders_up, order_up_index); 
+	  return target;
 	}
       }
     }
   }
-  return target; 
-
+  return target;
 }
 
 void orders_add_order(HardwareOrder hardware_order, int floor){
