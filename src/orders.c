@@ -10,8 +10,13 @@ void init_orders(){
 
 
 
-int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
+int orders_get_new_target(HardwareMovement hardware_movement, double curr_floor){
   if (hardware_movement == HARDWARE_MOVEMENT_UP){
+    if(target == -1)
+    {
+      //ESTOP
+      return orders_get_new_target(HARDWARE_MOVEMENT_STOP, curr_floor+0.5);
+    }
     int orders_up_size = vector_size(orders_up);
     //Going through orders_up to see if we can do some stops on the way
     //And adding them to target
@@ -27,6 +32,11 @@ int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor){
     return target;
   }
   else if (hardware_movement == HARDWARE_MOVEMENT_DOWN){
+    if(target == -1)
+    {
+      //ESTOP
+      return orders_get_new_target(HARDWARE_MOVEMENT_STOP, curr_floor-0.5);
+    }
     int orders_down_size = vector_size(orders_down);
     //Going through orders_down to see if we can do some stops on the way
     //And adding them to targets

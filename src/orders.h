@@ -24,7 +24,7 @@ void orders_clear_target(int floor);
 void orders_clear_all(); 
 
 
-int orders_get_new_target(HardwareMovement hardware_movement, int curr_floor);
+int orders_get_new_target(HardwareMovement hardware_movement, double curr_floor);
 
 
 void bubbleSort(int arr[], int n); 
